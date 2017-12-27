@@ -1,3 +1,8 @@
+import { default as Web3} from 'web3';
+import { default as contract } from 'truffle-contract'
+import auctionFactory from './contracts/AuctionFactory.json'
+import auction from './contracts/Auction.json'
+
 import React, { Component } from 'react';
 
 import './App.css';

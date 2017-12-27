@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 
+# generated contract code
+/src/contractss
+
 # testing
 /coverage
 

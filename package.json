@@ -5,7 +5,10 @@
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.0.17"
+    "react-scripts": "^1.0.17",
+    "truffle": "^4.0.4",
+    "truffle-contract": "^3.0.1",
+    "web3": "^0.20.2"
   },
   "scripts": {
     "start": "react-scripts start",
