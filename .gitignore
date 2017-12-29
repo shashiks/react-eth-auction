@@ -4,7 +4,8 @@
 /node_modules
 
 # generated contract code
-/src/contractss
+/src/contracts
+/test
 
 # testing
 /coverage
