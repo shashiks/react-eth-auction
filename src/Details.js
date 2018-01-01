@@ -58,20 +58,6 @@ export default class AuctionDetails extends Component {
   }
 
 
-   writeMsg = (msgVal, isErr, append) => {      
-      if(isErr) {
-        msgVal = "<font color='red'>" + msgVal + "</font>";
-      }
-      msgVal = "<p>" + msgVal + "</p>";
-      if(append) {
-        msgVal = this.state.message + msgVal;
-      } 
-      this.setState({message: msgVal});
-    }
-
-
-
-
   getAuctionDetails = () => {
     
     let auctioneerId = this.refs.auctioneerId.value; 

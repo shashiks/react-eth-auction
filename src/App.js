@@ -1,7 +1,9 @@
 //react and Front End imports
 import React, { Component } from 'react';
-import AuctionDetails from './Details.js'
-import CreateAuction from './Create.js'
+//import AuctionDetails from './Details.js'
+//import CreateAuction from './Create.js'
+//import BidAuction from './Bid.js'
+import PurchaseTicket from './PurchaseTicket.js'
 
 
 class App extends Component {
@@ -10,14 +12,15 @@ class App extends Component {
   // componentWillUnmount() {}
   
 
-  constructor (props) {
-        super(props);
-  }
+  // constructor (props) {
+  //       super(props);
+  // }
 
   render() {
     
     return (
-        <AuctionDetails />
+
+        <PurchaseTicket auctionId='0x050809e4442e30295808b4b02ef3a396c39b7cfc'/>
     );
   }
 
