@@ -1,5 +1,6 @@
 //react and Front End imports
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 //import { Label, DropdownButton, MenuItem, Form } from 'react-bootstrap'
 
 //Eth libraries
@@ -9,9 +10,6 @@ import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
 import auctionFactory from './contracts/AuctionFactory.json'
 import auction from './contracts/Auction.json'
-
-//styles?? can remove later
-import './App.css';
 
     //var watching = false; //start watching to events only 
     // var passwd = false;
@@ -39,26 +37,12 @@ export default class CreateAuction extends Component {
      AuctionFactory.setProvider(web3.currentProvider);
      Auction.setProvider(web3.currentProvider);
     
-      this.state = {
-        feature: 'Auction',
-        sub_feature: 'create',
-        message: ' '
-      }
-      this.clear = this.clear.bind(this);
-      this.writeMsg = this.writeMsg.bind(this);
-      this.createAuction = this.createAuction.bind(this);
-
       me = this;
         
   }
 
-   clear() {
-      this.setState({message: null});
-      //$("#msg").text('');
-    }
-
-  createAuction = (phrase ) => {
-        this.clear();
+  createAuction = () => {
+        // this.clear();
 
         // if(!watching) {
         //   watchEvents(myAuction, result);
@@ -85,45 +69,28 @@ export default class CreateAuction extends Component {
 
           AuctionFactory.deployed().then(function(factoryInstance) {
             console.log("AuctionFactory " + factoryInstance);
-            me.writeMsg("TEEETETE", false, false);
+            // me.writeMsg("TEEETETE", false, false);
             factoryInstance.createAuction( tktPerPerson, totalTkts, minAmt, validity,{gas:1500000,from:auctioneerHash}).then(function(contractId) {
-                me.writeMsg("Auction created for "+ auctioneerHash + " at address " + contractId, false, false);
+                me.props.onStatusChange("Auction created for "+ auctioneerHash, false, false);
+                me.props.setAuctioneerId(auctioneerHash);
              });
           });
         } catch (err) {
-            me.writeMsg("Error creating auction "+ err, true, false);
+            me.props.onStatusChange("Error creating auction "+ err, true, false);
         }
 
   }
 
 
-   writeMsg = (msgVal, isErr, append) => {      
-      if(isErr) {
-        msgVal = "<font color='red'>" + msgVal + "</font>";
-      }
-      msgVal = "<p>" + msgVal + "</p>";
-      if(append) {
-        msgVal = this.state.message + msgVal;
-      } 
-      this.setState({message: msgVal});
-    }
-
- 
-
-
   render() {
     
     return (
-      <div>
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item active">{this.state.feature}</li>
-          <li className="breadcrumb-item">{this.state.sub_feature}</li>
-        </ol>
-         <div className="card mb-3">
-          <div className="card-header"> {this.state.message}</div>
-          <div className="card-body">          
+        
+            <form>
+              <div className="card mb-3">
+                <div className="card-header"> Create Auction</div>
+                <div className="card-body">
 
-                  <form>
                   <div className="form-group">
                     <label htmlFor="auctioneerId">Auctioneer Address</label>
                     <input className="form-control" ref="auctioneerId"  defaultValue="0xE7D4fb00EA93027a10101A48F9b791626f232Ac6" placeholder="Auctioneer Address" />
@@ -156,18 +123,24 @@ export default class CreateAuction extends Component {
 
                   <div className="form-group">
                     <div className="form-row">
-                      <div className="col-md-6">
+                      <div className="col-md-4">
                           <a className="btn btn-primary btn-block" onClick={this.createAuction}>Create</a>
-                      </div>
-                      <div className="col-md-6">
-                        <a className="btn btn-primary btn-block" onClick={this.getAuctionDetails}>Reset</a>
                       </div>
                     </div>
                   </div>
+                  </div>
+                  </div>
+
                 </form>
-          </div>
-        </div>
-      </div>
     );
   }
 }
+
+
+CreateAuction.propTypes = {
+  onStatusChange: PropTypes.func.isRequired,
+  setAuctioneerId: PropTypes.func.isRequired
+
+}
+
+

@@ -57,10 +57,8 @@ export default class AuctionDetails extends Component {
         
   }
 
-
-  getAuctionDetails = () => {
-    
-    let auctioneerId = this.refs.auctioneerId.value; 
+  componentDidMount = () => {
+      let auctioneerId = this.props.auctioneerId; 
     
     AuctionFactory.deployed().then(function(factoryInstance) {
       factoryInstance.getAuction.call(auctioneerId).then(function(result) {
@@ -105,27 +103,23 @@ export default class AuctionDetails extends Component {
             me.setState({auctionStatus : 'Expired'});
         });
 
+        //set the auction id to parent
+        me.props.setAuctionId(me.state.auctionId);
 
       });
       
     });
-    
-} // getDetails
+
+
+  }
+
 
   render() {
     
     return (
-      <div>
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="#">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item active">Tables</li>
-      </ol>
       <form>
         <div className="card mb-3">
-          <div className="card-header">
-            <i className="fa fa-table"></i> Auction Details</div>
+          <div className="card-header"> Auction Details</div>
             <div className="card-body">
               <div className="table-responsive">
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
@@ -133,7 +127,7 @@ export default class AuctionDetails extends Component {
                   
                     <tr>
                       <td>Auctioneer Address</td>
-                      <td><input className="form-control" ref="auctioneerId"  defaultValue="0xE7D4fb00EA93027a10101A48F9b791626f232Ac6" placeholder="Enter Auctioneer Address" /></td>
+                      <td><input className="form-control" ref="auctioneerId"  defaultValue={this.props.auctioneerId} placeholder="Enter Auctioneer Address" /></td>
                     </tr>
                     <tr>
                       <td>Auction Id</td>
@@ -174,25 +168,17 @@ export default class AuctionDetails extends Component {
                   </tbody>
                 </table>                
               </div>
-              <div className="form-group">
-                <div className="form-row">
-                  <div className="col-md-6">
-                      <a className="btn btn-primary btn-block" onClick={this.getAuctionDetails}>Details</a>
-                  </div>
-                </div>
-              </div>              
           </div>
         </div>
       </form>
-      </div>
     );
   }
 }
 
 
-// AuctionDetails.propTypes = {
-//   auctioneerId: PropTypes.string,
-//   auctionId: PropTypes.string,
+AuctionDetails.propTypes = {
+   auctioneerId: PropTypes.string.isRequired,
+    setAuctionId: PropTypes.func.isRequired,
 //   totalTickets: PropTypes.number,
 //   ticketPerPerson: PropTypes.number,
 //   lastBidder: PropTypes.string,
@@ -201,7 +187,7 @@ export default class AuctionDetails extends Component {
 //   highestBid: PropTypes.number,
 //   balanceTikets: PropTypes.number,
 //   auctionStatus: PropTypes.string
-// }
+}
 
 
 

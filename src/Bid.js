@@ -27,6 +27,7 @@ import {TxnConsensus} from './block-verify.js';
     var me = null;
 
 
+
 export default class BidAuction extends Component {
 
   // componentDidMount() {}
@@ -100,17 +101,9 @@ export default class BidAuction extends Component {
   render() {
     
     return (
-      <div>
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="#">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item active">Tables</li>
-      </ol>
       <form>
         <div className="card mb-3">
-          <div className="card-header">
-            <i className="fa fa-table"></i>Bid for Ticket</div>
+          <div className="card-header">Bid for Ticket</div>
             <div className="card-body">
               <div className="table-responsive">
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
@@ -142,7 +135,6 @@ export default class BidAuction extends Component {
           </div>
         </div>
       </form>
-      </div>
     );
   }
 }
@@ -152,6 +144,5 @@ BidAuction.propTypes = {
   auctionId: PropTypes.string.isRequired
 
 }
-
 
 

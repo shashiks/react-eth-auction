@@ -118,17 +118,9 @@ export default class PurchaseTicket extends Component {
   render() {
     
     return (
-      <div>
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="#">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item active">Tables</li>
-      </ol>
       <form>
         <div className="card mb-3">
-          <div className="card-header">
-            <i className="fa fa-table"></i>Bid for Ticket</div>
+          <div className="card-header">Pay for Ticket</div>
             <div className="card-body">
               <div className="table-responsive">
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
@@ -143,7 +135,7 @@ export default class PurchaseTicket extends Component {
                       <td><input className="form-control" ref="txtBuyerId"  defaultValue="0x3ad78130DCff93d6c942c37aA45F0A004A0Ffe0C" placeholder="Buyer Address" /></td>
                     </tr>
                     <tr>
-                      <td>Bid Amunt</td>
+                      <td>Total Payable</td>
                       <td>{this.state.payableAmt}</td>
                     </tr>
 
@@ -163,16 +155,15 @@ export default class PurchaseTicket extends Component {
           </div>
         </div>
       </form>
-      </div>
     );
   }
 }
+
 
 
 PurchaseTicket.propTypes = {
   auctionId: PropTypes.string.isRequired
 
 }
-
 
 
