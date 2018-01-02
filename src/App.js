@@ -7,50 +7,67 @@ import BidAuction from './Bid.js'
 import PurchaseTicket from './PurchaseTicket.js'
 import Settlement from './Settlement.js'
 
-
-var currAuction; 
-
-var currEscrow; 
-
+import {watchEvents} from './event-watcher.js'
+//import getErrMsg from './event-watcher.js'
 
 // https://daveceddia.com/open-modal-in-react/
+
+
+var watching = 0;
 
 class App extends Component {
 
   // componentDidMount() {}
   // componentWillUnmount() {}
   
-
   constructor (props) {
         super(props);
         this.state = {
+          currAuction: null,
+          auctionId: null,
+          auctioneerId: '0xE7D4fb00EA93027a10101A48F9b791626f232Ac6',
           feature: 'A',
-          sub_feature: 'settle',
-          message: '',
-          auctionId: '',
-          auctioneerId: '0xE7D4fb00EA93027a10101A48F9b791626f232Ac6'
+          sub_feature: 'view',
+          message: null
         }
-
   }
 
 
-  updateStatus = (msgVal, isErr, append)  => {
+  updateStatus = (msgVal, isErr, append, clear)  => {
+
+        console.log(' value of clear ' + clear);
+
+        if(clear) {
+          this.setState({message: null});
+          return;
+        }
+
         if(isErr) {
           msgVal = "<font color='red'>" + msgVal + "</font>";
         }
         msgVal = "<p>" + msgVal + "</p>";
-        if(append) {
+        if(append && this.state.message) {
           msgVal = this.state.message + msgVal;
         } 
         this.setState({message: msgVal});
   }
 
-  updateAuctioneer = (pAuctioneerId) => {
+  setAuctionDetails = (pAuction, pAuctioneerId) => {
     this.setState({auctioneerId: pAuctioneerId});
+
   }
 
-  updateAuction = (pAuctionId) => {
-    this.setState({auctionId: pAuctionId});
+  setAuctionId = (pAuctionObj, pAuctionId) => {
+
+    console.log(" currAuction in setAuction id " + pAuctionObj + " " + pAuctionId);
+    if(pAuctionObj) {
+      this.setState({auctionId: pAuctionId});
+      //start listening to events when the auction is created
+      watchEvents(pAuctionObj, pAuctionId, this.updateStatus);
+    }
+
+    // getErrMsg('100');
+
   }
 
 
@@ -66,7 +83,7 @@ class App extends Component {
 
                <li className="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
                 <a onClick={ () => { this.setState({feature : 'A'});  this.setState({sub_feature : 'view'})  } }  className="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-                  <i className="fa fa-fw fa-file"></i>
+                  
                   <span className="nav-link-text">Auction Management</span>
                 </a>
                 <ul className="sidenav-second-level collapse" id="collapseExamplePages">
@@ -93,7 +110,7 @@ class App extends Component {
 
              <li className="nav-item" data-toggle="tooltip" data-placement="right" title="File Management">
                 <a onClick={ () => { this.setState({feature : 'F'});  this.setState({sub_feature : 'write'})  } }  className="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseFileMgmt" data-parent="#Accordion">
-                  <i className="fa fa-fw fa-file"></i>
+                  
                   <span className="nav-link-text">File Management</span>
                 </a>
                 <ul className="sidenav-second-level collapse" id="collapseFileMgmt">
@@ -134,24 +151,24 @@ class App extends Component {
                 </div>
 
                   { this.state.feature === 'A' && this.state.sub_feature === 'create' && 
-                    <CreateAuction onStatusChange={this.updateStatus} setAuctioneerId={this.updateAuctioneer}/>
+                    <CreateAuction onStatusChange={this.updateStatus} onAuctionDetails={this.setAuctionDetails} notifier={this.updateStatus}/>
                    } 
 
 
                   { this.state.feature === 'A' && this.state.sub_feature === 'view' && 
-                    <AuctionDetails auctioneerId={this.state.auctioneerId} setAuctionId={this.updateAuction} />
+                    <AuctionDetails auctioneerId={this.state.auctioneerId} onAuctionId={this.setAuctionId} notifier={this.updateStatus} />
                    } 
 
                   { this.state.feature === 'A' && this.state.sub_feature === 'bid' && 
-                    <BidAuction auctionId={this.state.auctionId} />
+                    <BidAuction auctionId={this.state.auctionId} notifier={this.updateStatus} />
                    } 
 
                   { this.state.feature === 'A' && this.state.sub_feature === 'pay' && 
-                    <PurchaseTicket auctionId={this.state.auctionId}  />
+                    <PurchaseTicket auctionId={this.state.auctionId} notifier={this.updateStatus} />
                    } 
 
                   { this.state.feature === 'A' && this.state.sub_feature === 'settle' && 
-                    <Settlement auctioneerId={this.state.auctioneerId} auctionId={this.state.auctionId} />
+                    <Settlement auctioneerId={this.state.auctioneerId} auctionId={this.state.auctionId} notifier={this.updateStatus}/>
                   } 
 
 

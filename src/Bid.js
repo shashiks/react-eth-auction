@@ -45,6 +45,8 @@ export default class BidAuction extends Component {
 
      console.log(" got auction id from props " + this.props.auctionId);
 
+
+
      // this.getAuctionDetails = this.getAuctionDetails.bind(this);
 
       // this.state= {
@@ -64,14 +66,16 @@ export default class BidAuction extends Component {
   }
 
 
-  bid = () => {
+   bid = () => {
     
+    this.props.notifier(null, false, false, true);
+
     let bidder = this.refs.txtBidderId.value; 
     let bidAmount = this.refs.txtBidAmount.value; 
     
     console.log('Auction id from props ' + this.props.auctionId);
 
-
+    this.props
       var bidAuction = Auction.at(this.props.auctionId);
 
       console.log('got auction ' + bidAuction);
@@ -141,7 +145,8 @@ export default class BidAuction extends Component {
 
 
 BidAuction.propTypes = {
-  auctionId: PropTypes.string.isRequired
+  auctionId: PropTypes.string.isRequired,
+  notifier : PropTypes.func.isRequired
 
 }
 

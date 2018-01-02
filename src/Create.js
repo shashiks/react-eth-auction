@@ -42,13 +42,8 @@ export default class CreateAuction extends Component {
   }
 
   createAuction = () => {
-        // this.clear();
 
-        // if(!watching) {
-        //   watchEvents(myAuction, result);
-        //   watching = 1;
-        // }
- 
+      this.props.notifier(null, false, false, true);
 
        try {
           let auctioneerHash = this.refs.auctioneerId.value; 
@@ -70,9 +65,9 @@ export default class CreateAuction extends Component {
           AuctionFactory.deployed().then(function(factoryInstance) {
             console.log("AuctionFactory " + factoryInstance);
             // me.writeMsg("TEEETETE", false, false);
-            factoryInstance.createAuction( tktPerPerson, totalTkts, minAmt, validity,{gas:1500000,from:auctioneerHash}).then(function(contractId) {
+            factoryInstance.createAuction( tktPerPerson, totalTkts, minAmt, validity,{gas:1500000,from:auctioneerHash}).then(function(auction) {
                 me.props.onStatusChange("Auction created for "+ auctioneerHash, false, false);
-                me.props.setAuctioneerId(auctioneerHash);
+                me.props.onAuctionDetails(auction, auctioneerHash);
              });
           });
         } catch (err) {
@@ -139,7 +134,8 @@ export default class CreateAuction extends Component {
 
 CreateAuction.propTypes = {
   onStatusChange: PropTypes.func.isRequired,
-  setAuctioneerId: PropTypes.func.isRequired
+  onAuctionDetails: PropTypes.func.isRequired,
+  notifier : PropTypes.func.isRequired
 
 }
 

@@ -58,7 +58,10 @@ export default class AuctionDetails extends Component {
   }
 
   componentDidMount = () => {
-      let auctioneerId = this.props.auctioneerId; 
+    
+    console.log('calling cleaner');
+    me.props.notifier(false,false,false,true);
+    let auctioneerId = this.props.auctioneerId; 
     
     AuctionFactory.deployed().then(function(factoryInstance) {
       factoryInstance.getAuction.call(auctioneerId).then(function(result) {
@@ -70,8 +73,9 @@ export default class AuctionDetails extends Component {
         //   watchEvents(myAuction, result);
         //   watching = 1;
         // }
+        me.props.onAuctionId(myAuction, result);
 
-          me.setState({auctionId : result});
+        me.setState({auctionId : result});
 
         myAuction.totalTickets.call().then(function(totalTicketsVal) {
           me.setState({totalTickets : totalTicketsVal['c']});
@@ -104,7 +108,7 @@ export default class AuctionDetails extends Component {
         });
 
         //set the auction id to parent
-        me.props.setAuctionId(me.state.auctionId);
+        
 
       });
       
@@ -178,7 +182,8 @@ export default class AuctionDetails extends Component {
 
 AuctionDetails.propTypes = {
    auctioneerId: PropTypes.string.isRequired,
-    setAuctionId: PropTypes.func.isRequired,
+    onAuctionId: PropTypes.func.isRequired,
+    notifier: PropTypes.func.isRequired,
 //   totalTickets: PropTypes.number,
 //   ticketPerPerson: PropTypes.number,
 //   lastBidder: PropTypes.string,

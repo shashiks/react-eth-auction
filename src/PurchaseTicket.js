@@ -57,6 +57,8 @@ export default class PurchaseTicket extends Component {
 
   getPayable = () => {
   
+      this.props.notifier(null, false, false, true);
+
       let buyer = this.refs.txtBuyerId.value; 
       var auction = Auction.at(this.props.auctionId);
       
@@ -69,8 +71,24 @@ export default class PurchaseTicket extends Component {
    }
 
 
+    watchPurchase = (escrow, id) => {
+
+      console.log("Watching purchase tkt " + escrow + " esc id " + id)
+      var tPaidEvent = escrow.TicketPaid({fromBlock: 'latest', toBlock: 'latest', address : id});
+        tPaidEvent.watch(function(error, result){
+            if(!error) {
+              me.props.notifier("Payment received from buyer : " + result.args.buyer + " of amount " + result.args.price, false, true);
+            } else {
+              me.props.notifier("Error reading receipt " + error, true, true);
+            }
+        });
+    }
+  
+
   pay = () => {
     
+    this.props.notifier(null, false, false, true);
+
     let buyer = this.refs.txtBuyerId.value; 
     let orderAmt = this.state.payableAmt;
     
@@ -87,7 +105,7 @@ export default class PurchaseTicket extends Component {
         factInstance.getEscrow.call(me.props.auctionId).then(function(escId) {
           var pEscrow = AuctionEscrow.at(escId);
           console.log("Escrow  " + pEscrow);
-          //watchPurchase(pEscrow, escId);
+          me.watchPurchase(pEscrow, escId);
 
           pEscrow.hasPaid.call(buyer).then(function(status) {
             console.log("Buyer " + buyer + " hasPaid " + status);
@@ -162,8 +180,8 @@ export default class PurchaseTicket extends Component {
 
 
 PurchaseTicket.propTypes = {
-  auctionId: PropTypes.string.isRequired
-
+  auctionId: PropTypes.string.isRequired,
+  notifier : PropTypes.func.isRequired
 }
 
 

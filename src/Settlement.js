@@ -53,9 +53,26 @@ export default class PurchaseTicket extends Component {
         
   }
 
+
+  watchTkt = (escrow, id) => {
+
+  console.log("Watching tkt " + escrow + " esc id " + id)
+  var event = escrow.TicketReceipt({fromBlock: 'latest', toBlock: 'latest', address : id});
+    event.watch(function(error, result){
+        if(!error) {
+          me.props.notifier("Ticket Receipt confirmed for buyer " + result.args.buyer, false, true);
+        } else {
+          me.props.notifier("Error confirming ticket :; " + error, true, true);
+        }
+        
+    });
+
+}
   
   confirmTktReceipt = () => {
       
+      this.props.notifier(null, false, false, true);
+
       let buyer = this.refs.tktReceiptId.value;
       
       // console.log("confirmTktReceipt details " + buyer + " " + auctioneerId);
@@ -68,7 +85,7 @@ export default class PurchaseTicket extends Component {
             var pEscrow = AuctionEscrow.at(escId);
             // console.log(" conftkt auctionId " + auctionId + " esc id :: " + escId);
             
-            //watchTkt(pEscrow, escId);
+            me.watchTkt(pEscrow, escId);
 
             pEscrow.recordTicketReceipt.sendTransaction({from: buyer, gas: 4000000}).then(function(txnHash) {
               // writeMsg("Transaction Id " + txnHash, false, false);
@@ -97,7 +114,8 @@ export default class PurchaseTicket extends Component {
 
   releaseFunds = () => {
 
-      // clear();
+      this.props.notifier(null, false, false, true);
+
       let auctioneerId = this.props.auctioneerId;
       let buyer = this.refs.tktReceiptId.value;
       
@@ -192,6 +210,7 @@ export default class PurchaseTicket extends Component {
 
 PurchaseTicket.propTypes = {
   auctionId: PropTypes.string.isRequired,
-  auctioneerId: PropTypes.string.isRequired
+  auctioneerId: PropTypes.string.isRequired,
+  notifier : PropTypes.func.isRequired
 
 }
