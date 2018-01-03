@@ -11,9 +11,6 @@ import { default as contract } from 'truffle-contract'
 import auctionFactory from './contracts/AuctionFactory.json'
 import auction from './contracts/Auction.json'
 
-//styles?? can remove later
-import './App.css';
-
     //var watching = false; //start watching to events only 
     // var passwd = false;
 
@@ -59,7 +56,6 @@ export default class AuctionDetails extends Component {
 
   componentDidMount = () => {
     
-    console.log('calling cleaner');
     me.props.notifier(false,false,false,true);
     let auctioneerId = this.props.auctioneerId; 
     
@@ -67,7 +63,7 @@ export default class AuctionDetails extends Component {
       factoryInstance.getAuction.call(auctioneerId).then(function(result) {
         console.warn("address of auction for  " + auctioneerId + " is " + result);
         var myAuction = Auction.at(result);
-        console.warn("auction @  " + myAuction);
+        // console.warn("auction @  " + myAuction);
 
         // if(!watching) {
         //   watchEvents(myAuction, result);
@@ -100,15 +96,11 @@ export default class AuctionDetails extends Component {
           me.setState({balanceTikets : bal['c']});
         });
         myAuction.isActive.call().then(function(status) {
-          console.log('auction status ' + status);
           if(status)
             me.setState({auctionStatus : 'Active'});
           else
             me.setState({auctionStatus : 'Expired'});
         });
-
-        //set the auction id to parent
-        
 
       });
       

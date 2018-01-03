@@ -8,12 +8,8 @@ import PurchaseTicket from './PurchaseTicket.js'
 import Settlement from './Settlement.js'
 
 import {watchEvents} from './event-watcher.js'
-//import getErrMsg from './event-watcher.js'
-
 // https://daveceddia.com/open-modal-in-react/
 
-
-var watching = 0;
 
 class App extends Component {
 
@@ -27,7 +23,7 @@ class App extends Component {
           auctionId: null,
           auctioneerId: '0xE7D4fb00EA93027a10101A48F9b791626f232Ac6',
           feature: 'A',
-          sub_feature: 'view',
+          sub_feature: 'bid',
           message: null
         }
   }
@@ -35,7 +31,6 @@ class App extends Component {
 
   updateStatus = (msgVal, isErr, append, clear)  => {
 
-        console.log(' value of clear ' + clear);
 
         if(clear) {
           this.setState({message: null});
@@ -59,7 +54,6 @@ class App extends Component {
 
   setAuctionId = (pAuctionObj, pAuctionId) => {
 
-    console.log(" currAuction in setAuction id " + pAuctionObj + " " + pAuctionId);
     if(pAuctionObj) {
       this.setState({auctionId: pAuctionId});
       //start listening to events when the auction is created
@@ -81,7 +75,7 @@ class App extends Component {
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className="navbar-nav navbar-sidenav" id="exampleAccordion">
 
-               <li className="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
+               <li className="nav-item" data-toggle="tooltip" data-placement="right" title="Auction Management">
                 <a onClick={ () => { this.setState({feature : 'A'});  this.setState({sub_feature : 'view'})  } }  className="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
                   
                   <span className="nav-link-text">Auction Management</span>
@@ -147,11 +141,11 @@ class App extends Component {
               </ol>
               
                 <div className="card-header"> 
-                      <p>{this.state.message}</p>
+                      <div dangerouslySetInnerHTML={{__html: this.state.message}} />
                 </div>
 
                   { this.state.feature === 'A' && this.state.sub_feature === 'create' && 
-                    <CreateAuction onStatusChange={this.updateStatus} onAuctionDetails={this.setAuctionDetails} notifier={this.updateStatus}/>
+                    <CreateAuction onAuctionDetails={this.setAuctionDetails} notifier={this.updateStatus}/>
                    } 
 
 

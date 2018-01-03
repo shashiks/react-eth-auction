@@ -28,7 +28,7 @@ export const TxnConsensus = (txWeb3, txhash, blockCount, repeatInSeconds, numPol
          }
        });
      }
-     else if (pollState == stateEnum.mined) {
+     else if (pollState === stateEnum.mined) {
       // console.log('poll State ' + pollState);
         // console.log(" is mined " + pollState);
          txWeb3.eth.getBlockNumber(function (e, blockNum) {
@@ -43,7 +43,7 @@ export const TxnConsensus = (txWeb3, txhash, blockCount, repeatInSeconds, numPol
            }
          });
      }
-    else if (pollState == stateEnum.awaited) {
+    else if (pollState === stateEnum.awaited) {
       // console.log('poll State ' + pollState);
           // console.log(" is awaited " + pollState);
          txWeb3.eth.getTransactionReceipt(txhash, function(e, receipt) {

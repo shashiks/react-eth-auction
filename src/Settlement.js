@@ -54,6 +54,11 @@ export default class PurchaseTicket extends Component {
   }
 
 
+  componentDidMount() {
+    this.props.notifier(null,false,false,true);
+
+  }
+
   watchTkt = (escrow, id) => {
 
   console.log("Watching tkt " + escrow + " esc id " + id)
@@ -99,7 +104,7 @@ export default class PurchaseTicket extends Component {
                   console.log("recordTicketReceipt receipt transactionIndex " + receipt.transactionIndex);
                   
                 } else {
-                  console.log("err from poll " + err);
+                  me.props.notifier("Error confirming ticket receipt " + err, true, false);
                 }
               });
             });
@@ -149,6 +154,7 @@ export default class PurchaseTicket extends Component {
               TxnConsensus(web3, txnHash, 3, 4000, 4, function(err, receipt) { 
                 // console.log("Got result from block confirmation");
                 if(receipt) {
+                  me.props.notifier("Funds released successfully. Txn Id : " + txnHash);
                   console.log("releaseFunds Receipt status " + receipt.status);
                   console.log("receipt blockHash " + receipt.blockHash);
                   console.log("receipt blockNumber " + receipt.blockNumber);
@@ -156,7 +162,7 @@ export default class PurchaseTicket extends Component {
                   
                 } else {
                   // writeMsg("Error reading receipt " + err, true, true);
-                  console.log("Error reading receipt " + err);
+                  me.props.notifier("Error releasing funds " + err, true, false);
                   
                 }
               });

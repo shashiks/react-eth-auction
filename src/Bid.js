@@ -11,7 +11,7 @@ import { default as contract } from 'truffle-contract'
 import auctionFactory from './contracts/AuctionFactory.json'
 import auction from './contracts/Auction.json'
 import {TxnConsensus} from './block-verify.js';
-
+import Auth from './auth.js'
 //styles?? can remove later
 //import './App.css';
 
@@ -43,25 +43,45 @@ export default class BidAuction extends Component {
      AuctionFactory.setProvider(web3.currentProvider);
      Auction.setProvider(web3.currentProvider);
 
-     console.log(" got auction id from props " + this.props.auctionId);
+     this.state = { 
+      doAuth: false,
+      bidder: '0x3ad78130DCff93d6c942c37aA45F0A004A0Ffe0C',
+      amt: null
 
-
-
-     // this.getAuctionDetails = this.getAuctionDetails.bind(this);
-
-      // this.state= {
-      //     auctionId: null,
-      //     totalTickets: null,
-      //     ticketPerPerson: null,
-      //     lastBidder: null,
-      //     lastBid: null,
-      //     highestBidder: null,
-      //     highestBid: null,
-      //     balanceTikets: null,
-      //     auctionStatus: false
-      // }
+    };
 
       me = this;
+        
+  }
+
+
+
+  askAuth = () => {
+    
+    this.props.notifier(null, false, false, true);
+
+
+
+    let bidAmount = this.refs.txtBidAmount.value; 
+    if(!bidAmount || bidAmount < 1) {
+      this.props.notifier("Invalid Bid Amount ", true, false);
+      return;
+    }
+    this.setState({bidder: this.refs.txtBidderId.value});
+    this.setState({amt: this.refs.txtBidAmount.value});
+    this.setState({doAuth: true});
+  }
+
+  doAuth = (authStatus, returnProps) => {
+
+    //close the auth screen
+    this.setState({doAuth: false});
+    if(!authStatus) {
+      me.props.notifier('Transaction Auth Cancelled!', false, false);
+      return;
+    }
+        
+    this.bid();
         
   }
 
@@ -70,20 +90,21 @@ export default class BidAuction extends Component {
     
     this.props.notifier(null, false, false, true);
 
-    let bidder = this.refs.txtBidderId.value; 
-    let bidAmount = this.refs.txtBidAmount.value; 
+    let bidder = this.state.bidder; 
+    let bidAmount = this.state.amt; 
+
+    console.log('bid details '+ bidder + " " + bidAmount);
     
     console.log('Auction id from props ' + this.props.auctionId);
 
-    this.props
       var bidAuction = Auction.at(this.props.auctionId);
 
       console.log('got auction ' + bidAuction);
 
-      var unlocked = web3.personal.unlockAccount(bidder, 'welcome123', 10);
-      console.log('unlocked ' + unlocked);
+      // var unlocked = web3.personal.unlockAccount(bidder, 'welcome123', 10);
+      // console.log('unlocked ' + unlocked);
 
-      var txnHash = bidAuction.bid.sendTransaction(bidAmount, {gas: 4000000, from:bidder}).then(function(txnHash) {
+      bidAuction.bid.sendTransaction(bidAmount, {gas: 4000000, from:bidder}).then(function(txnHash) {
         console.log("Transaction Id " + txnHash, false, false);
         //Magic Numbers : wait for 3 confirmations at 4000ms intervals for 4 repetitions
         //these three params should be configs. change to 12 confirmations eventually
@@ -95,6 +116,7 @@ export default class BidAuction extends Component {
             console.log("receipt transactionIndex " + receipt.transactionIndex);            
           } else {
             console.log("err from poll " + err);
+            me.props.notifier("Error bidding for ticket " + err, true, false);
           }
         });
       });
@@ -102,10 +124,19 @@ export default class BidAuction extends Component {
 
 } // getDetails
 
+
   render() {
-    
     return (
-      <form>
+    <div>
+
+      { this.state.doAuth &&
+        <Auth resultCallback={this.doAuth} bidderId={this.refs.txtBidderId.value} />
+
+      }
+
+
+    {!this.state.doAuth &&
+     <form>
         <div className="card mb-3">
           <div className="card-header">Bid for Ticket</div>
             <div className="card-body">
@@ -119,11 +150,11 @@ export default class BidAuction extends Component {
                     </tr>
                     <tr>
                       <td>Bidder Id</td>
-                      <td><input className="form-control" ref="txtBidderId"  defaultValue="0x3ad78130DCff93d6c942c37aA45F0A004A0Ffe0C" placeholder="Bidder Address" /></td>
+                      <td><input className="form-control" ref="txtBidderId"  defaultValue={this.state.bidder}  placeholder="Bidder Address" /></td>
                     </tr>
                     <tr>
-                      <td>Bid Amunt</td>
-                      <td><input className="form-control" ref="txtBidAmount" type='number' placeholder="Bid Amount" /></td>
+                      <td>Bid Amount</td>
+                      <td><input className="form-control" ref="txtBidAmount" type='number' defaultValue={this.state.amt} placeholder="Bid Amount" /></td>
                     </tr>
 
                   </tbody>
@@ -132,13 +163,17 @@ export default class BidAuction extends Component {
               <div className="form-group">
                 <div className="form-row">
                   <div className="col-md-6">
-                      <a className="btn btn-primary btn-block" onClick={this.bid}>Bid</a>
+                      <a className="btn btn-primary btn-block" onClick={this.askAuth}>Bid</a>
                   </div>
                 </div>
               </div>              
           </div>
         </div>
       </form>
+      }
+
+      
+    </div>
     );
   }
 }

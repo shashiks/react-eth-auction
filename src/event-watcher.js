@@ -46,13 +46,13 @@ export function   watchEvents (bidAuction, itemId, callback) {
 export function getErrMsg(errCode){
   
   var resMsg = errCode + " : ";
-  if(errCode == '100' ) {
+  if(errCode === '100' ) {
     resMsg += "Bid Amount cannot be less than minimum bid amount";
-  } else if(errCode == '101'|| errCode == '500') {
+  } else if(errCode === '101'|| errCode === '500') {
     resMsg += "The Auction has expired!";
-  } else if(errCode == '102') {
+  } else if(errCode === '102') {
     resMsg += "Bidder has been alloted maximum allowed tickets for this Auction";
-  } else if(errCode == '103') {
+  } else if(errCode === '103') {
     resMsg += "Current bid cannot be less than previous bid for this ticket";
   }
   return resMsg;

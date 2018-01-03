@@ -123,6 +123,7 @@ export default class PurchaseTicket extends Component {
                 
               } else {
                 console.log("buyTicket err from poll " + err);
+                me.props.notifier("Error while paying for ticket " + err, true, false);
               }
             });
           });
