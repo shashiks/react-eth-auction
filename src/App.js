@@ -8,8 +8,6 @@ import PurchaseTicket from './PurchaseTicket.js'
 import Settlement from './Settlement.js'
 
 import {watchEvents} from './event-watcher.js'
-// https://daveceddia.com/open-modal-in-react/
-
 
 class App extends Component {
 
@@ -59,9 +57,6 @@ class App extends Component {
       //start listening to events when the auction is created
       watchEvents(pAuctionObj, pAuctionId, this.updateStatus);
     }
-
-    // getErrMsg('100');
-
   }
 
 
@@ -76,59 +71,31 @@ class App extends Component {
             <ul className="navbar-nav navbar-sidenav" id="exampleAccordion">
 
                <li className="nav-item" data-toggle="tooltip" data-placement="right" title="Auction Management">
-                <a onClick={ () => { this.setState({feature : 'A'});  this.setState({sub_feature : 'view'})  } }  className="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                <a onClick={ () => { this.setState({sub_feature : 'view'})  } }  className="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
                   
                   <span className="nav-link-text">Auction Management</span>
                 </a>
                 <ul className="sidenav-second-level collapse" id="collapseExamplePages">
                   <li>
-                    <a onClick={ () => { this.setState({feature : 'A'});this.setState({sub_feature : 'create'}) } }>Create</a>
+                    <a onClick={ () => { this.setState({sub_feature : 'Create'}) } }>Create</a>
                   </li>
                   <li>
-                    <a onClick={ () => { this.setState({feature : 'A'});this.setState({sub_feature : 'view'}) } }>View</a>
+                    <a onClick={ () => { this.setState({sub_feature : 'View'}) } }>View</a>
                   </li>
                   <li>
-                    <a onClick={ () => { this.setState({feature : 'A'});this.setState({sub_feature : 'bid'}) } }>Bid</a>
+                    <a onClick={ () => { this.setState({sub_feature : 'Bid'}) } }>Bid</a>
                   </li>
                   <li>
-                    <a onClick={ () => { this.setState({feature : 'A'});this.setState({sub_feature : 'pay'}) } }>Pay Ticket</a>
+                    <a onClick={ () => { this.setState({sub_feature : 'Pay'}) } }>Pay Ticket</a>
                   </li>
                   <li>
-                    <a onClick={ () => { this.setState({feature : 'A'});this.setState({sub_feature : 'settle'}) } }>Settle Payments</a>
+                    <a onClick={ () => { this.setState({sub_feature : 'Settle'}) } }>Settle Payments</a>
                   </li>
-                  <li>
-                    <a onClick={ () => { this.setState({feature : 'A'}); this.setState({sub_feature : 'del'}) } }>Remove</a>
-                  </li>
+                  // <li>
+                  //   <a onClick={ () => { this.setState({feature : 'A'}); this.setState({sub_feature : 'Delete'}) } }>Remove</a>
+                  // </li>
                 </ul>
               </li>
-
-             <li className="nav-item" data-toggle="tooltip" data-placement="right" title="File Management">
-                <a onClick={ () => { this.setState({feature : 'F'});  this.setState({sub_feature : 'write'})  } }  className="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseFileMgmt" data-parent="#Accordion">
-                  
-                  <span className="nav-link-text">File Management</span>
-                </a>
-                <ul className="sidenav-second-level collapse" id="collapseFileMgmt">
-                  <li>
-                    <a onClick={ () => {this.setState({feature : 'F'}); this.setState({sub_feature : 'dir'}) } }>Create Dir</a>
-                  </li>
-                  <li>
-                    <a onClick={ () => {this.setState({feature : 'F'}); this.setState({sub_feature : 'write'}) } }>Write Content</a>
-                  </li>
-                  <li>
-                    <a onClick={ () => {this.setState({feature : 'F'}); this.setState({sub_feature : 'read'}) } }>View Content</a>
-                  </li>
-                  <li>
-                    <a onClick={ () => {this.setState({feature : 'F'}); this.setState({sub_feature : 'upload'}) } }>Upload File</a>
-                  </li>
-                  <li>
-                    <a onClick={ () => {this.setState({feature : 'F'}); this.setState({sub_feature : 'download'}) } }>Download File</a>
-                  </li>
-                  <li>
-                    <a onClick={ () => {this.setState({feature : 'F'}); this.setState({sub_feature : 'del'}) } }>Remove Files / Dir</a>
-                  </li>
-                </ul>
-              </li>
-
             </ul>
           </div>
         </nav>
@@ -136,7 +103,7 @@ class App extends Component {
           <div className="content-wrapper">
           <div className="container-fluid">
               <ol className="breadcrumb">
-                <li className="breadcrumb-item active">{this.state.feature}</li>
+                <li className="breadcrumb-item active">Auction</li>
                 <li className="breadcrumb-item">{this.state.sub_feature}</li>
               </ol>
               
@@ -144,24 +111,24 @@ class App extends Component {
                       <div dangerouslySetInnerHTML={{__html: this.state.message}} />
                 </div>
 
-                  { this.state.feature === 'A' && this.state.sub_feature === 'create' && 
+                  {this.state.sub_feature === 'Create' && 
                     <CreateAuction onAuctionDetails={this.setAuctionDetails} notifier={this.updateStatus}/>
                    } 
 
 
-                  { this.state.feature === 'A' && this.state.sub_feature === 'view' && 
+                  { this.state.sub_feature === 'View' && 
                     <AuctionDetails auctioneerId={this.state.auctioneerId} onAuctionId={this.setAuctionId} notifier={this.updateStatus} />
                    } 
 
-                  { this.state.feature === 'A' && this.state.sub_feature === 'bid' && 
+                  { this.state.sub_feature === 'Bid' && 
                     <BidAuction auctionId={this.state.auctionId} notifier={this.updateStatus} />
                    } 
 
-                  { this.state.feature === 'A' && this.state.sub_feature === 'pay' && 
+                  { this.state.sub_feature === 'Pay' && 
                     <PurchaseTicket auctionId={this.state.auctionId} notifier={this.updateStatus} />
                    } 
 
-                  { this.state.feature === 'A' && this.state.sub_feature === 'settle' && 
+                  { this.state.sub_feature === 'Settle' && 
                     <Settlement auctioneerId={this.state.auctioneerId} auctionId={this.state.auctionId} notifier={this.updateStatus}/>
                   } 
 

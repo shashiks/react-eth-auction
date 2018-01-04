@@ -12,11 +12,6 @@ import auctionFactory from './contracts/AuctionFactory.json'
 import auction from './contracts/Auction.json'
 import {TxnConsensus} from './block-verify.js';
 import Auth from './auth.js'
-//styles?? can remove later
-//import './App.css';
-
-    //var watching = false; //start watching to events only 
-    // var passwd = false;
 
     var web3 = null;
     var AuctionFactory = contract(auctionFactory);
@@ -59,8 +54,6 @@ export default class BidAuction extends Component {
   askAuth = () => {
     
     this.props.notifier(null, false, false, true);
-
-
 
     let bidAmount = this.refs.txtBidAmount.value; 
     if(!bidAmount || bidAmount < 1) {
